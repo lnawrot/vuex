@@ -43,12 +43,13 @@ type ActionMethod<P, Type extends MethodType> = {
  */
 interface MapGetters<Getters> {
   <Key extends keyof Getters>(map: Key[]): { [K in Key]: Computed<Getters[K]> };
-  <Map extends Record<string, keyof Getters>>(map: Map): { [K in keyof Map]: Computed<Getters[Map[K]]> };
+  <Map extends Record<string, keyof Getters>>(map: Map): { [K in keyof Map]: Index<Getters, Map[K]> };
 }
 
+type Index<T extends Record<any, any>, K> = T[K];
 interface RootMapGetters<Getters> extends MapGetters<Getters> {
   <Key extends keyof Getters>(namespace: string, map: Key[]): { [K in Key]: Computed<Getters[K]> };
-  <Map extends Record<string, keyof Getters>>(namespace: string, map: Map): { [K in keyof Map]: Computed<Getters[Map[K]]> };
+  <Map extends Record<string, keyof Getters>>(namespace: string, map: Map): { [K in keyof Map]: Computed<Index<Getters, Map[K]>> };
 }
 
 /**
@@ -56,13 +57,13 @@ interface RootMapGetters<Getters> extends MapGetters<Getters> {
  */
 interface MapState<State, Getters> {
   <Key extends keyof State>(map: Key[]): { [K in Key]: Computed<State[K]> };
-  <Map extends Record<string, keyof State>>(map: Map): { [K in keyof Map]: Computed<State[Map[K]]> };
+  <Map extends Record<string, keyof State>>(map: Map): { [K in keyof Map]: Computed<Index<State, Map[K]>> };
   <Map extends BaseStateMap<State, Getters>>(map: Map): { [K in keyof Map]: Computed<any> };
 }
 
 interface RootMapState<State, Getters> extends MapState<State, Getters> {
   <Key extends keyof State>(namespace: string, map: Key[]): { [K in Key]: Computed<State[K]> };
-  <Map extends Record<string, keyof State>>(namespace: string, map: Map): { [K in keyof Map]: Computed<State[Map[K]]> };
+  <Map extends Record<string, keyof State>>(namespace: string, map: Map): { [K in keyof Map]: Computed<Index<State, Map[K]>> };
   <Map extends BaseStateMap<State, Getters>>(namespace: string, map: Map): { [K in keyof Map]: Computed<any> };
 }
 
@@ -71,13 +72,13 @@ interface RootMapState<State, Getters> extends MapState<State, Getters> {
  */
 interface MapMutations<Mutations, Type extends MethodType> {
   <Key extends keyof Mutations>(map: Key[]): { [K in Key]: MutationMethod<Mutations[K], Type> };
-  <Map extends Record<string, keyof Mutations>>(map: Map): { [K in keyof Map]: MutationMethod<Mutations[Map[K]], Type> };
+  <Map extends Record<string, keyof Mutations>>(map: Map): { [K in keyof Map]: MutationMethod<Index<Mutations, Map[K]>, Type> };
   <Map extends BaseMethodMap<Commit<Mutations>>>(map: Map): { [K in keyof Map]: Method<any> };
 }
 
 interface RootMapMutations<Mutations, Type extends MethodType> extends MapMutations<Mutations, Type> {
   <Key extends keyof Mutations>(namespace: string, map: Key[]): { [K in Key]: MutationMethod<Mutations[K], Type> };
-  <Map extends Record<string, keyof Mutations>>(namespace: string, map: Map): { [K in keyof Map]: MutationMethod<Mutations[Map[K]], Type> };
+  <Map extends Record<string, keyof Mutations>>(namespace: string, map: Map): { [K in keyof Map]: MutationMethod<Index<Mutations, Map[K]>, Type> };
   <Map extends BaseMethodMap<Commit<Mutations>>>(namespace: string, map: Map): { [K in keyof Map]: Method<any> };
 }
 
@@ -86,13 +87,13 @@ interface RootMapMutations<Mutations, Type extends MethodType> extends MapMutati
  */
 interface MapActions<Actions, Type extends MethodType> {
   <Key extends keyof Actions>(map: Key[]): { [K in Key]: ActionMethod<Actions[K], Type> };
-  <Map extends Record<string, keyof Actions>>(map: Map): { [K in keyof Map]: ActionMethod<Actions[Map[K]], Type> };
+  <Map extends Record<string, keyof Actions>>(map: Map): { [K in keyof Map]: ActionMethod<Index<Actions, Map[K]>, Type> };
   <Map extends BaseMethodMap<Dispatch<Actions>>>(map: Map): { [K in keyof Map]: Method<any> };
 }
 
 interface RootMapActions<Actions, Type extends MethodType> extends MapActions<Actions, Type> {
   <Key extends keyof Actions>(namespace: string, map: Key[]): { [K in Key]: ActionMethod<Actions[K], Type> };
-  <Map extends Record<string, keyof Actions>>(namespace: string, map: Map): { [K in keyof Map]: ActionMethod<Actions[Map[K]], Type> };
+  <Map extends Record<string, keyof Actions>>(namespace: string, map: Map): { [K in keyof Map]: ActionMethod<Index<Actions, Map[K]>, Type> };
   <Map extends BaseMethodMap<Dispatch<Actions>>>(namespace: string, map: Map): { [K in keyof Map]: Method<any> };
 }
 
