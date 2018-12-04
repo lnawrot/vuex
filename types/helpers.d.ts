@@ -43,7 +43,7 @@ type ActionMethod<P, Type extends MethodType> = {
  */
 interface MapGetters<Getters> {
   <Key extends keyof Getters>(map: Key[]): { [K in Key]: Computed<Getters[K]> };
-  <Map extends Record<string, keyof Getters>>(map: Map): { [K in keyof Map]: Index<Getters, Map[K]> };
+		  <Map extends Record<string, keyof Getters>>(map: Map): { [K in keyof Map]: Computed<Index<Getters, Map[K]>> };
 }
 
 type Index<T extends Record<any, any>, K> = T[K];
